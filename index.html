@@ -1228,7 +1228,7 @@
 					const img = document.createElement('img');
 					img.src = item.thumb;
 					img.alt = item.alt || '';
-					img.loading = 'lazy';
+					img.decoding = 'async';
 
 					div.appendChild(img);
 					row.appendChild(div);
