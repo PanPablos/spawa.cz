@@ -1299,8 +1299,15 @@
 					img.width = 380;
 					img.height = 260;
 					img.onerror = () => {
+
+					if (!img.dataset.retried) {
+						img.dataset.retried = "true";
+						img.src = img.src.replace(/\.[a-zA-Z0-9]+$/, ".jpg");
+					} else {
+
 						img.classList.add('thumb-error');
 						div.classList.add('thumb-broken');
+					}
 					};
 
 					div.appendChild(img);
@@ -1348,10 +1355,15 @@
 			};
 
 			loader.onerror = () => {
+			if (!loader.dataset.retried) {
+				loader.dataset.retried = "true";
+				loader.src = loader.src.replace(/\.[a-zA-Z0-9]+$/, ".jpg");
+			} else {
 				if (token !== lbLoadToken) return;
 				clearTimeout(lbTimeoutId);
 				lightbox.classList.remove('lb-loading');
 				lightbox.classList.add('lb-error-state');
+			}
 			};
 
 			lbTimeoutId = setTimeout(() => {
