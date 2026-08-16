@@ -1,0 +1,134 @@
+{
+  "hero": {
+    "background": "img/tlo.jpg"
+  },
+  "about": {
+    "photo": "img/spawaczwc.png",
+    "photoAlt": "Wojciech Chrobok - Spawacz"
+  },
+  "gallery": [
+    {
+      "thumb": "img/portfolio/porecz_dluga/1.jpg",
+      "alt": "Długa poręcz",
+      "images": [
+        "img/portfolio/porecz_dluga/1.jpg",
+        "img/portfolio/porecz_dluga/2.jpg",
+        "img/portfolio/porecz_dluga/3.jpg",
+        "img/portfolio/porecz_dluga/4.jpg"
+      ]
+    },
+    {
+      "thumb": "img/portfolio/hak_naciag/1.jpg",
+      "alt": "Długa poręcz",
+      "images": [
+        "img/portfolio/hak_naciag/1.jpg",
+        "img/portfolio/hak_naciag/2.jpg",
+        "img/portfolio/hak_naciag/3.jpg"
+      ]
+    },
+    {
+      "thumb": "img/portfolio/uchwyt_wsporniki/1.jpg",
+      "alt": "Długa poręcz",
+      "images": [
+        "img/portfolio/uchwyt_wsporniki/1.jpg",
+        "img/portfolio/uchwyt_wsporniki/2.jpg",
+        "img/portfolio/uchwyt_wsporniki/3.jpg",
+        "img/portfolio/uchwyt_wsporniki/4.jpg",
+        "img/portfolio/uchwyt_wsporniki/5.jpg"
+      ]
+    },
+    {
+      "thumb": "img/portfolio/uchwyt_skos/1.jpg",
+      "alt": "Długa poręcz",
+      "images": [
+        "img/portfolio/uchwyt_skos/1.jpg",
+        "img/portfolio/uchwyt_skos/2.jpg",
+        "img/portfolio/uchwyt_skos/3.jpg",
+        "img/portfolio/uchwyt_skos/4.jpg",
+        "img/portfolio/uchwyt_skos/5.jpg"
+      ]
+    },
+    {
+      "thumb": "img/portfolio/porecz/1.jpg",
+      "alt": "Długa poręcz",
+      "images": [
+        "img/portfolio/porecz/1.jpg",
+        "img/portfolio/porecz/2.jpg",
+        "img/portfolio/porecz/3.jpg",
+        "img/portfolio/porecz/4.jpg"
+      ]
+    },
+    {
+      "thumb": "img/portfolio/dlugi_prosty/1.jpg",
+      "alt": "Długa poręcz",
+      "images": [
+        "img/portfolio/dlugi_prosty/1.jpg",
+        "img/portfolio/dlugi_prosty/2.jpg",
+        "img/portfolio/dlugi_prosty/3.jpg",
+        "img/portfolio/dlugi_prosty/4.jpg"
+      ]
+    },
+    {
+      "thumb": "img/portfolio/uchwyt_na_antene/1.jpg",
+      "alt": "Długa poręcz",
+      "images": [
+        "img/portfolio/uchwyt_na_antene/1.jpg",
+        "img/portfolio/uchwyt_na_antene/2.jpg",
+        "img/portfolio/uchwyt_na_antene/3.jpg"
+      ]
+    },
+    {
+      "thumb": "img/portfolio/uchwyt_na_satelite/1.jpg",
+      "alt": "Długa poręcz",
+      "images": [
+        "img/portfolio/uchwyt_na_satelite/1.jpg",
+        "img/portfolio/uchwyt_na_satelite/2.jpg"
+      ]
+    },
+    {
+      "thumb": "img/portfolio/barierka/1.png",
+      "alt": "Długa poręcz",
+      "images": [
+        "img/portfolio/barierka/1.png"
+      ]
+    },
+    {
+      "thumb": "img/portfolio/satelita_okragly/1.jpg",
+      "alt": "Długa poręcz",
+      "images": [
+        "img/portfolio/satelita_okragly/1.jpg",
+        "img/portfolio/satelita_okragly/2.jpg",
+        "img/portfolio/satelita_okragly/3.jpg"
+      ]
+    },
+    {
+      "thumb": "img/portfolio/tluczek/1.png",
+      "alt": "Długa poręcz",
+      "images": [
+        "img/portfolio/tluczek/1.png",
+        "img/portfolio/tluczek/2.png"
+      ]
+    },
+    {
+      "thumb": "img/portfolio/niestandardowy/1.jpg",
+      "alt": "Długa poręcz",
+      "images": [
+        "img/portfolio/niestandardowy/1.jpg",
+        "img/portfolio/niestandardowy/2.jpg",
+        "img/portfolio/niestandardowy/3.jpg",
+        "img/portfolio/niestandardowy/4.jpg",
+        "img/portfolio/niestandardowy/5.jpg",
+        "img/portfolio/niestandardowy/6.jpg",
+        "img/portfolio/niestandardowy/7.jpg"
+      ]
+    },
+	{
+      "thumb": "img/portfolio/mocowanie_rura/1.jpg",
+      "alt": "Długa poręcz",
+      "images": [
+        "img/portfolio/mocowanie_rura/1.jpg",
+        "img/portfolio/mocowanie_rura/2.jpg"
+      ]
+    }
+  ]
+}
