@@ -463,6 +463,23 @@
 			transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 		}
 
+		.gallery-item img.thumb-error {
+			display: none;
+		}
+
+		.gallery-item.thumb-broken::before {
+			content: '\f03e';
+			font-family: 'Font Awesome 6 Free';
+			font-weight: 900;
+			position: absolute;
+			inset: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 34px;
+			color: var(--text-muted);
+		}
+
 		.gallery-item::after {
 			content: 'ZOBACZ GALERIĘ';
 			font-family: 'Oswald', sans-serif;
@@ -613,6 +630,51 @@
 			max-height: 80vh;
 			box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
 			user-select: none;
+		}
+
+		#lightbox img.lb-hidden {
+			display: none;
+		}
+
+		.lb-spinner {
+			display: none;
+			width: 54px;
+			height: 54px;
+			border: 4px solid rgba(255, 255, 255, 0.15);
+			border-top-color: var(--accent);
+			border-radius: 50%;
+			animation: lb-spin 0.8s linear infinite;
+		}
+
+		#lightbox.lb-loading .lb-spinner {
+			display: block;
+		}
+
+		@keyframes lb-spin {
+			to {
+				transform: rotate(360deg);
+			}
+		}
+
+		.lb-error {
+			display: none;
+			flex-direction: column;
+			align-items: center;
+			gap: 12px;
+			color: var(--text-muted);
+			font-family: 'Oswald', sans-serif;
+			letter-spacing: 1px;
+			text-align: center;
+			max-width: 80vw;
+		}
+
+		#lightbox.lb-error-state .lb-error {
+			display: flex;
+		}
+
+		.lb-error i {
+			font-size: 40px;
+			color: var(--accent);
 		}
 
 		.lb-btn {
@@ -1090,6 +1152,11 @@
 	<div id="lightbox">
 		<i class="fas fa-times" id="lb-close"></i>
 		<i class="fas fa-chevron-left lb-btn" id="lb-prev"></i>
+		<div class="lb-spinner"></div>
+		<div class="lb-error">
+			<i class="fas fa-triangle-exclamation"></i>
+			<span>Nie udało się wczytać zdjęcia.</span>
+		</div>
 		<img id="lb-img" src="" alt="Powiększone zdjęcie">
 		<i class="fas fa-chevron-right lb-btn" id="lb-next"></i>
 		<div id="lb-counter">1 / 1</div>
@@ -1229,6 +1296,12 @@
 					img.src = item.thumb;
 					img.alt = item.alt || '';
 					img.decoding = 'async';
+					img.width = 380;
+					img.height = 260;
+					img.onerror = () => {
+						img.classList.add('thumb-error');
+						div.classList.add('thumb-broken');
+					};
 
 					div.appendChild(img);
 					row.appendChild(div);
@@ -1241,10 +1314,66 @@
 		}
 
 		function updateLightbox() {
-			lbImg.src = currentImages[currentIndex].trim();
+			const src = currentImages[currentIndex].trim();
 			lbCounter.innerText = (currentIndex + 1) + " / " + currentImages.length;
 			btnPrev.style.display = currentImages.length > 1 ? 'block' : 'none';
 			btnNext.style.display = currentImages.length > 1 ? 'block' : 'none';
+			loadLightboxImage(src);
+			preloadNeighbors();
+		}
+
+		let lbLoadToken = 0;
+		let lbTimeoutId = null;
+
+		// Ładuje obraz do lightboxa z widocznym spinnerem, obsługą błędu
+		// i zabezpieczeniem czasowym - jeśli obraz nie odpowie w 15s
+		// (martwy link, bardzo wolny serwer), pokazujemy komunikat błędu
+		// zamiast zostawiać spinner kręcący się w nieskończoność.
+		function loadLightboxImage(src) {
+			const token = ++lbLoadToken;
+			clearTimeout(lbTimeoutId);
+
+			lightbox.classList.remove('lb-error-state');
+			lightbox.classList.add('lb-loading');
+			lbImg.classList.add('lb-hidden');
+
+			const loader = new Image();
+
+			loader.onload = () => {
+				if (token !== lbLoadToken) return;
+				clearTimeout(lbTimeoutId);
+				lbImg.src = src;
+				lbImg.classList.remove('lb-hidden');
+				lightbox.classList.remove('lb-loading');
+			};
+
+			loader.onerror = () => {
+				if (token !== lbLoadToken) return;
+				clearTimeout(lbTimeoutId);
+				lightbox.classList.remove('lb-loading');
+				lightbox.classList.add('lb-error-state');
+			};
+
+			lbTimeoutId = setTimeout(() => {
+				if (token !== lbLoadToken) return;
+				lightbox.classList.remove('lb-loading');
+				lightbox.classList.add('lb-error-state');
+			}, 15000);
+
+			loader.src = src;
+		}
+
+		// Wczytuje z wyprzedzeniem sąsiednie zdjęcia (poprzednie/następne),
+		// żeby strzałki Prev/Next działały płynnie, a nie od nowa czekały
+		// na sieć przy każdym kliknięciu.
+		function preloadNeighbors() {
+			if (currentImages.length <= 1) return;
+			const nextSrc = currentImages[(currentIndex + 1) % currentImages.length].trim();
+			const prevSrc = currentImages[(currentIndex - 1 + currentImages.length) % currentImages.length].trim();
+			[nextSrc, prevSrc].forEach(src => {
+				const pre = new Image();
+				pre.src = src;
+			});
 		}
 
 		btnNext.addEventListener('click', (e) => { e.stopPropagation(); currentIndex = (currentIndex + 1) % currentImages.length; updateLightbox(); });
