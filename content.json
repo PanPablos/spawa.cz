@@ -9,7 +9,7 @@
   "gallery": [
     {
       "thumb": "img/portfolio/porecz_dluga/1.jpg",
-      "alt": "Długa poręcz",
+      "alt": "Długa poręcz spawana",
       "images": [
         "img/portfolio/porecz_dluga/1.jpg",
         "img/portfolio/porecz_dluga/2.jpg",
@@ -19,7 +19,7 @@
     },
     {
       "thumb": "img/portfolio/hak_naciag/1.jpg",
-      "alt": "Długa poręcz",
+      "alt": "Hak naciągowy",
       "images": [
         "img/portfolio/hak_naciag/1.jpg",
         "img/portfolio/hak_naciag/2.jpg",
@@ -28,7 +28,7 @@
     },
     {
       "thumb": "img/portfolio/uchwyt_wsporniki/1.jpg",
-      "alt": "Długa poręcz",
+      "alt": "Uchwyt wspornikowy",
       "images": [
         "img/portfolio/uchwyt_wsporniki/1.jpg",
         "img/portfolio/uchwyt_wsporniki/2.jpg",
@@ -39,7 +39,7 @@
     },
     {
       "thumb": "img/portfolio/uchwyt_skos/1.jpg",
-      "alt": "Długa poręcz",
+      "alt": "Uchwyt skośny",
       "images": [
         "img/portfolio/uchwyt_skos/1.jpg",
         "img/portfolio/uchwyt_skos/2.jpg",
@@ -50,7 +50,7 @@
     },
     {
       "thumb": "img/portfolio/porecz/1.jpg",
-      "alt": "Długa poręcz",
+      "alt": "Poręcz",
       "images": [
         "img/portfolio/porecz/1.jpg",
         "img/portfolio/porecz/2.jpg",
@@ -60,7 +60,7 @@
     },
     {
       "thumb": "img/portfolio/dlugi_prosty/1.jpg",
-      "alt": "Długa poręcz",
+      "alt": "Długa prosta poręcz",
       "images": [
         "img/portfolio/dlugi_prosty/1.jpg",
         "img/portfolio/dlugi_prosty/2.jpg",
@@ -70,7 +70,7 @@
     },
     {
       "thumb": "img/portfolio/uchwyt_na_antene/1.jpg",
-      "alt": "Długa poręcz",
+      "alt": "Uchwyt na antenę",
       "images": [
         "img/portfolio/uchwyt_na_antene/1.jpg",
         "img/portfolio/uchwyt_na_antene/2.jpg",
@@ -79,7 +79,7 @@
     },
     {
       "thumb": "img/portfolio/uchwyt_na_satelite/1.jpg",
-      "alt": "Długa poręcz",
+      "alt": "Uchwyt na satelitę",
       "images": [
         "img/portfolio/uchwyt_na_satelite/1.jpg",
         "img/portfolio/uchwyt_na_satelite/2.jpg"
@@ -87,14 +87,14 @@
     },
     {
       "thumb": "img/portfolio/barierka/1.png",
-      "alt": "Długa poręcz",
+      "alt": "Barierka",
       "images": [
         "img/portfolio/barierka/1.png"
       ]
     },
     {
       "thumb": "img/portfolio/satelita_okragly/1.jpg",
-      "alt": "Długa poręcz",
+      "alt": "Okrągły uchwyt na satelitę",
       "images": [
         "img/portfolio/satelita_okragly/1.jpg",
         "img/portfolio/satelita_okragly/2.jpg",
@@ -103,7 +103,7 @@
     },
     {
       "thumb": "img/portfolio/tluczek/1.png",
-      "alt": "Długa poręcz",
+      "alt": "Uchwyt tłuczek",
       "images": [
         "img/portfolio/tluczek/1.png",
         "img/portfolio/tluczek/2.png"
@@ -111,7 +111,7 @@
     },
     {
       "thumb": "img/portfolio/niestandardowy/1.jpg",
-      "alt": "Długa poręcz",
+      "alt": "Niestandardowy uchwyt",
       "images": [
         "img/portfolio/niestandardowy/1.jpg",
         "img/portfolio/niestandardowy/2.jpg",
@@ -122,9 +122,9 @@
         "img/portfolio/niestandardowy/7.jpg"
       ]
     },
-	{
+    {
       "thumb": "img/portfolio/mocowanie_rura/1.jpg",
-      "alt": "Długa poręcz",
+      "alt": "Mocowanie do rury",
       "images": [
         "img/portfolio/mocowanie_rura/1.jpg",
         "img/portfolio/mocowanie_rura/2.jpg"
