@@ -417,33 +417,33 @@
 			font-size: 14px;
 		}
 
+		/* GALERIA: jeden, zunifikowany mechanizm dla komputera i telefonu.
+		   Ruch (auto-scroll) i przeciąganie (myszą lub palcem) są sterowane
+		   z JS (patrz sekcja <script> - setupMarquee), nie CSS-ową animacją,
+		   dzięki czemu oba tryby działają jednocześnie i tak samo wszędzie. */
 		.marquee {
-			display: flex;
-			gap: 20px;
+			overflow: hidden;
+			touch-action: pan-y;
 			user-select: none;
+			cursor: grab;
 			padding: 20px 0;
+		}
+
+		.marquee.dragging {
+			cursor: grabbing;
+		}
+
+		.marquee-track {
+			display: flex;
+			width: max-content;
+			will-change: transform;
 		}
 
 		.marquee-content {
 			flex-shrink: 0;
 			display: flex;
 			gap: 20px;
-			min-width: 100%;
-			animation: scroll-left 30s linear infinite;
-		}
-
-		.marquee:hover .marquee-content {
-			animation-play-state: paused;
-		}
-
-		@keyframes scroll-left {
-			from {
-				transform: translateX(0);
-			}
-
-			to {
-				transform: translateX(calc(-100% - 20px));
-			}
+			padding-right: 20px;
 		}
 
 		.gallery-item {
@@ -461,6 +461,7 @@
 			height: 100%;
 			object-fit: cover;
 			transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+			-webkit-user-drag: none;
 		}
 
 		.gallery-item img.thumb-error {
@@ -954,36 +955,7 @@
 				font-size: 30px;
 			}
 
-			/* GALERIA NA TELEFONIE: zamiast automatycznej animacji CSS,
-			   zwykłe przewijanie dotykiem z natywnym pędem (jak każdy inny
-			   scroll na telefonie), bo próba "swipe'owania" animowanej
-			   karuzeli i tak nic nie dawała - ruch był tylko jednokierunkowy
-			   i sterowany przez keyframes, nie przez palec użytkownika. */
-			.marquee {
-				overflow-x: auto;
-				-webkit-overflow-scrolling: touch;
-				scroll-snap-type: x proximity;
-				scrollbar-width: none;
-			}
-
-			.marquee::-webkit-scrollbar {
-				display: none;
-			}
-
-			.marquee-content {
-				animation: none !important;
-				min-width: auto;
-			}
-
-			/* Drugi (zduplikowany) pas służył wyłącznie do zapętlenia
-			   animacji na desktopie - przy ręcznym scrollu jest zbędny
-			   i tylko powielałby zdjęcia. */
-			.marquee-content:nth-of-type(2) {
-				display: none;
-			}
-
 			.gallery-item {
-				scroll-snap-align: start;
 				width: 78vw;
 				max-width: 340px;
 			}
@@ -1305,6 +1277,7 @@
 		function showGalleryStatus(message, showRetry) {
 			const marquee = document.getElementById('marquee');
 			if (!marquee) return;
+			marqueeController.stop();
 			marquee.innerHTML = '<p class="marquee-status">' + message +
 				(showRetry ? ' <a href="#" id="marquee-retry-link" style="color:var(--accent);text-decoration:underline;">Spróbuj ponownie</a>' : '') +
 				'</p>';
@@ -1340,53 +1313,219 @@
 			}
 		}
 
-		// Ładowanie pojedynczej miniaturki galerii z realnym ponawianiem prób.
-		// Wcześniej przy błędzie próbowano tylko RAZ zamienić rozszerzenie
-		// pliku i jeśli to nie pomogło, zdjęcie było oznaczane jako zepsute
-		// na stałe - dlatego przy chwilowym problemie z siecią (typowe na
-		// telefonie) część galerii po prostu nigdy się nie ładowała.
-		// Teraz: kilka prób tego samego adresu z rosnącym odstępem, potem
-		// próba zamiany rozszerzenia, a dopiero na końcu - jeśli dalej się
-		// nie uda - zdjęcie ląduje na liście do ponowienia przy powrocie sieci.
+		// Ładowanie pojedynczej miniaturki galerii z cierpliwym, wielokrotnym
+		// ponawianiem. Obserwacja z GitHub Pages: część zdjęć czasem "się nie
+		// łapie" przy pierwszym żądaniu (zimny cache CDN / chwilowy timeout),
+		// ale wczytuje się bez problemu przy kolejnej próbie po chwili -
+		// dlatego zamiast szybko się poddawać, próbujemy tego samego adresu
+		// wielokrotnie na przestrzeni ok. 2 minut, zanim uznamy zdjęcie za
+		// faktycznie zepsute (i nawet wtedy w tle próbujemy dalej).
 		const brokenThumbs = [];
+		const RETRY_DELAYS_MS = [1000, 2000, 4000, 7000, 10000, 15000, 20000, 30000];
 
 		function loadThumb(img, div, originalSrc, attempt = 1, extTried = false) {
-			const maxRetries = 3;
-
 			img.onerror = () => {
-				if (attempt <= maxRetries) {
-					setTimeout(() => loadThumb(img, div, originalSrc, attempt + 1, extTried), attempt * 700);
+				if (attempt <= RETRY_DELAYS_MS.length) {
+					setTimeout(() => loadThumb(img, div, originalSrc, attempt + 1, extTried), RETRY_DELAYS_MS[attempt - 1]);
 				} else if (!extTried) {
 					loadThumb(img, div, originalSrc.replace(/\.[a-zA-Z0-9]+$/, ".jpg"), 1, true);
 				} else {
 					img.classList.add('thumb-error');
 					div.classList.add('thumb-broken');
-					brokenThumbs.push({ img, div, originalSrc });
+					if (!brokenThumbs.includes(div)) brokenThumbs.push({ img, div, originalSrc });
 				}
 			};
 
 			img.onload = () => {
 				img.classList.remove('thumb-error');
 				div.classList.remove('thumb-broken');
+				const idx = brokenThumbs.findIndex(b => b.div === div);
+				if (idx !== -1) brokenThumbs.splice(idx, 1);
 			};
 
-			// Cache-buster przy kolejnych próbach tego samego adresu, żeby
-			// ominąć ewentualny zbuforowany w przeglądarce błąd sieciowy.
-			img.src = attempt > 1
-				? originalSrc + (originalSrc.includes('?') ? '&' : '?') + 'retry=' + attempt
-				: originalSrc;
+			img.src = originalSrc;
 		}
 
-		// Gdy urządzenie odzyska połączenie z siecią, spróbuj ponownie
-		// wczytać wszystkie miniaturki, które ostatecznie się nie udały.
-		window.addEventListener('online', () => {
-			while (brokenThumbs.length) {
-				const { img, div, originalSrc } = brokenThumbs.pop();
-				img.classList.remove('thumb-error');
-				div.classList.remove('thumb-broken');
-				loadThumb(img, div, originalSrc);
+		// Dodatkowa, cykliczna próba w tle dla zdjęć, które ostatecznie się
+		// nie wczytały - niezależnie od zdarzenia "online" (na telefonie
+		// stan sieci bywa niemiarodajny, a łącze po prostu "się poprawia").
+		window.addEventListener('online', retryBrokenThumbs);
+		setInterval(retryBrokenThumbs, 20000);
+
+		function retryBrokenThumbs() {
+			if (!brokenThumbs.length) return;
+			const toRetry = brokenThumbs.splice(0, brokenThumbs.length);
+			toRetry.forEach(({ img, div, originalSrc }) => loadThumb(img, div, originalSrc));
+		}
+
+		// UNIWERSALNA KARUZELA (ta sama logika na komputerze i telefonie)
+		// Zamiast animacji CSS działającej tylko "same z siebie" i osobno
+		// od przewijania dotykiem, cały ruch galerii - zarówno automatyczny,
+		// jak i przeciąganie myszą/palcem z pędem (momentum) po puszczeniu -
+		// jest liczony w JS na klatkę (requestAnimationFrame) i stosowany
+		// jako jeden wspólny transform: translateX(). Dzięki temu przeciągać
+		// galerię można TAK SAMO na kompie (myszą) i na telefonie (palcem),
+		// a poza przeciąganiem sama płynnie i w nieskończoność przewija się
+		// dalej - również na telefonie.
+		const marqueeController = (function () {
+			const AUTOPLAY_SPEED = 40; // px / sekundę
+			const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+			let marquee, track, rows;
+			let rowWidth = 0;
+			let offset = 0;
+			let velocity = 0;
+			let isDragging = false;
+			let isHoverPaused = false;
+			let dragStartX = 0;
+			let dragStartOffset = 0;
+			let dragTravelled = 0;
+			let lastMoveX = 0;
+			let lastMoveTs = 0;
+			let lastFrameTs = null;
+			let rafId = null;
+			let bound = false;
+
+			function normalize() {
+				if (rowWidth <= 0) return;
+				while (offset <= -rowWidth) offset += rowWidth;
+				while (offset > 0) offset -= rowWidth;
 			}
-		});
+
+			function render() {
+				if (track) track.style.transform = 'translateX(' + offset + 'px)';
+			}
+
+			function frame(ts) {
+				if (lastFrameTs === null) lastFrameTs = ts;
+				const dt = Math.min((ts - lastFrameTs) / 1000, 0.1);
+				lastFrameTs = ts;
+
+				if (isDragging) {
+					// pozycję podczas przeciągania ustawia bezpośrednio pointerMove
+				} else if (Math.abs(velocity) > 3) {
+					// faza pędu (bezwładności) po puszczeniu
+					offset += velocity * dt;
+					velocity *= Math.pow(0.06, dt);
+				} else {
+					velocity = 0;
+					if (!isHoverPaused && !reduceMotion) {
+						offset -= AUTOPLAY_SPEED * dt;
+					}
+				}
+
+				normalize();
+				render();
+				rafId = requestAnimationFrame(frame);
+			}
+
+			function pointerDown(e) {
+				if (!rowWidth) return;
+				isDragging = true;
+				dragTravelled = 0;
+				velocity = 0;
+				marquee.classList.add('dragging');
+				dragStartX = e.clientX;
+				dragStartOffset = offset;
+				lastMoveX = e.clientX;
+				lastMoveTs = performance.now();
+				if (marquee.setPointerCapture) {
+					try { marquee.setPointerCapture(e.pointerId); } catch (err) { }
+				}
+			}
+
+			function pointerMove(e) {
+				if (!isDragging) return;
+				const dx = e.clientX - dragStartX;
+				dragTravelled = Math.max(dragTravelled, Math.abs(dx));
+				offset = dragStartOffset + dx;
+
+				const now = performance.now();
+				const dt = now - lastMoveTs;
+				if (dt > 0) velocity = ((e.clientX - lastMoveX) / dt) * 1000;
+				lastMoveX = e.clientX;
+				lastMoveTs = now;
+
+				normalize();
+				render();
+			}
+
+			function pointerUp() {
+				if (!isDragging) return;
+				isDragging = false;
+				marquee.classList.remove('dragging');
+			}
+
+			// Kliknięcie, które w rzeczywistości było przeciągnięciem (swipe),
+			// nie powinno otwierać lightboxa - inaczej każdy swipe przypadkiem
+			// odpalałby powiększenie zdjęcia.
+			function suppressClickAfterDrag(e) {
+				if (dragTravelled > 8) {
+					e.stopPropagation();
+					e.preventDefault();
+				}
+			}
+
+			function bindOnce() {
+				if (bound || !marquee) return;
+				bound = true;
+
+				marquee.addEventListener('pointerdown', pointerDown);
+				marquee.addEventListener('pointermove', pointerMove);
+				marquee.addEventListener('pointerup', pointerUp);
+				marquee.addEventListener('pointercancel', pointerUp);
+				marquee.addEventListener('pointerleave', (e) => {
+					if (isDragging && e.pointerType === 'mouse') pointerUp();
+				});
+				marquee.addEventListener('mouseenter', () => { isHoverPaused = true; });
+				marquee.addEventListener('mouseleave', () => { isHoverPaused = false; });
+				marquee.addEventListener('click', suppressClickAfterDrag, true);
+
+				window.addEventListener('resize', () => {
+					if (rows && rows[0]) {
+						const w = rows[0].getBoundingClientRect().width;
+						if (w) rowWidth = w;
+					}
+				});
+			}
+
+			// Wywoływane po (prze)zbudowaniu galerii z content.json: owija
+			// dwa identyczne pasy .marquee-content w jeden .marquee-track,
+			// przelicza jego szerokość i (re)startuje pętlę animacji.
+			function refresh() {
+				marquee = document.getElementById('marquee');
+				if (!marquee) return;
+
+				track = marquee.querySelector('.marquee-track');
+				if (!track) {
+					track = document.createElement('div');
+					track.className = 'marquee-track';
+					while (marquee.firstChild) track.appendChild(marquee.firstChild);
+					marquee.appendChild(track);
+				}
+
+				rows = track.querySelectorAll('.marquee-content');
+				rowWidth = rows[0] ? rows[0].getBoundingClientRect().width : 0;
+				offset = 0;
+				velocity = 0;
+				render();
+
+				bindOnce();
+
+				if (rafId) cancelAnimationFrame(rafId);
+				lastFrameTs = null;
+				if (rowWidth > 0) {
+					rafId = requestAnimationFrame(frame);
+				}
+			}
+
+			function stop() {
+				if (rafId) cancelAnimationFrame(rafId);
+				rafId = null;
+			}
+
+			return { refresh, stop };
+		})();
 
 		// Buduje dwa identyczne pasy .marquee-content (potrzebne do płynnej,
 		// nieskończonej karuzeli) na podstawie tablicy z content.json.
@@ -1426,6 +1565,7 @@
 			}
 
 			attachGalleryListeners();
+			marqueeController.refresh();
 		}
 
 		function updateLightbox() {
