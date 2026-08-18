@@ -129,6 +129,40 @@
         "img/portfolio/mocowanie_rura/1.jpg",
         "img/portfolio/mocowanie_rura/2.jpg"
       ]
+    },
+
+
+    {
+      "thumb": "img/portfolio/domofon/1.jpg",
+      "alt": "Mocowanie do rury",
+      "images": [
+        "img/portfolio/domofon/1.jpg",
+        "img/portfolio/domofon/2.jpg",
+        "img/portfolio/domofon/3.jpg",
+        "img/portfolio/domofon/4.jpg",
+        "img/portfolio/domofon/5.jpg"
+      ]
+    },
+
+
+    {
+      "thumb": "img/portfolio/uchwyt_na_flage/1.jpg",
+      "alt": "Mocowanie do rury",
+      "images": [
+        "img/portfolio/uchwyt_na_flage/1.jpg",
+        "img/portfolio/uchwyt_na_flage/2.jpg",
+        "img/portfolio/uchwyt_na_flage/3.jpg"
+      ]
+    },
+
+
+    {
+      "thumb": "img/portfolio/uchwyt_dlugi/1.jpg",
+      "alt": "Mocowanie do rury",
+      "images": [
+        "img/portfolio/uchwyt_dlugi/1.jpg",
+        "img/portfolio/uchwyt_dlugi/2.jpg"
+      ]
     }
   ]
 }
