@@ -5,10 +5,36 @@
   <meta charset="utf-8" />
   <title>Usługi Spawalnicze - spawa.cz</title>
 
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23121212'/><path d='M50 15 L58 42 L85 50 L58 58 L50 85 L42 58 L15 50 L42 42 Z' fill='%23ff5e00'/><circle cx='50' cy='50' r='8' fill='%23ffffff' opacity='0.9'/></svg>">
   <meta name="description"
     content="Spawanie każdej stali: czarna, nierdzewna. Metody TIG, MAG, elektroda. Pełna personalizacja nietypowych uchwytów i konstrukcji na zamówienie." />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Wojciech Chrobok" />
+  <meta name="theme-color" content="#050505" />
+  <link rel="canonical" href="https://spawa.cz/" />
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23121212'/><path d='M50 15 L58 42 L85 50 L58 58 L50 85 L42 58 L15 50 L42 42 Z' fill='%23ff5e00'/><circle cx='50' cy='50' r='8' fill='%23ffffff' opacity='0.9'/></svg>">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="pl_PL" />
+  <meta property="og:url" content="https://spawa.cz/" />
+  <meta property="og:site_name" content="spawa.cz" />
+  <meta property="og:title" content="Usługi Spawalnicze - spawa.cz" />
+  <meta property="og:description"
+    content="Spawanie każdej stali: czarna, nierdzewna. Metody TIG, MAG, elektroda. Pełna personalizacja nietypowych uchwytów i konstrukcji na zamówienie." />
+  <meta property="og:image" content="https://spawa.cz/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Usługi Spawalnicze - spawa.cz" />
+  <meta name="twitter:description"
+    content="Spawanie każdej stali: czarna, nierdzewna. Metody TIG, MAG, elektroda. Pełna personalizacja nietypowych uchwytów i konstrukcji na zamówienie." />
+  <meta name="twitter:image" content="https://spawa.cz/og-image.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,6 +43,25 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "spawa.cz - Usługi Spawalnicze",
+    "image": "https://spawa.cz/og-image.png",
+    "telephone": "+48694004440",
+    "email": "wojciech@op.pl",
+    "url": "https://spawa.cz/",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Chałupki",
+      "postalCode": "47-460",
+      "addressCountry": "PL"
+    }
+  }
+  </script>
 </head>
 
 <body>
@@ -45,11 +90,13 @@
       <a href="#kontakt">Kontakt</a>
       <a href="https://allegro.pl/uzytkownik/graz2/" target="_blank" rel="noopener noreferrer">Allegro</a>
     </nav>
-    <a href="tel:+48694004440" class="header-phone">
-      <i class="fas fa-phone"></i>
+    <a href="tel:+48694004440" class="header-phone" aria-label="Zadzwoń: 694 004 440">
+      <i class="fas fa-phone" aria-hidden="true"></i>
       <span>694 004 440</span>
     </a>
   </header>
+
+  <main>
 
   <section id="hero">
     <div class="hero-content reveal">
@@ -59,7 +106,7 @@
         projekt? Zrealizuję go dla Ciebie z rzemieślniczą precyzją.</p>
       <div class="hero-cta-row">
         <a href="#galeria" class="btn">Zobacz realizacje</a>
-        <a href="tel:+48694004440" class="hero-phone"><i class="fas fa-phone"></i> 694 004 440</a>
+        <a href="tel:+48694004440" class="hero-phone" aria-label="Zadzwoń: 694 004 440"><i class="fas fa-phone" aria-hidden="true"></i> 694 004 440</a>
       </div>
     </div>
   </section>
@@ -114,7 +161,7 @@
 
       <div class="guide-grid">
         <div class="guide-card">
-          <i class="fas fa-microscope"></i>
+          <i class="fas fa-microscope" aria-hidden="true"></i>
           <span class="guide-tag">Precyzja</span>
           <h3>TIG</h3>
           <p>Najdokładniejsza metoda, spoina jest czysta i estetyczna, niemal bez rozprysków. Wolniejsza w
@@ -123,7 +170,7 @@
         </div>
 
         <div class="guide-card">
-          <i class="fas fa-bolt"></i>
+          <i class="fas fa-bolt" aria-hidden="true"></i>
           <span class="guide-tag">Wydajność</span>
           <h3>MAG</h3>
           <p>Drut spawalniczy podawany jest automatycznie, co przyspiesza pracę przy zachowaniu solidnej
@@ -131,7 +178,7 @@
         </div>
 
         <div class="guide-card">
-          <i class="fas fa-hammer"></i>
+          <i class="fas fa-hammer" aria-hidden="true"></i>
           <span class="guide-tag">Uniwersalność</span>
           <h3>Elektroda (MMA)</h3>
           <p>Klasyka nie wymaga butli z gazem, więc świetnie radzi sobie w terenie i przy wietrze.
@@ -156,7 +203,7 @@
 
       <div class="guide-grid">
         <div class="guide-card">
-          <i class="fas fa-cube"></i>
+          <i class="fas fa-cube" aria-hidden="true"></i>
           <span class="guide-tag">Budżet i wytrzymałość</span>
           <h3>Stal czarna</h3>
           <p>Tańsza i bardzo wytrzymała mechanicznie. Wymaga zabezpieczenia antykorozyjnego malowania
@@ -164,7 +211,7 @@
         </div>
 
         <div class="guide-card">
-          <i class="fas fa-shield-alt"></i>
+          <i class="fas fa-shield-alt" aria-hidden="true"></i>
           <span class="guide-tag">Bezobsługowość</span>
           <h3>Stal nierdzewna 316L</h3>
           <p>Nie rdzewieje i nie wymaga konserwacji. Estetyczna sama w sobie, sprawdza się na zewnątrz, na
@@ -187,40 +234,40 @@
       <div class="contact-grid">
 
         <div class="info-box box-primary">
-          <i class="fas fa-phone"></i>
-          <h3>+48 694 004 440</h3>
-          <p>Zadzwoń lub napisz SMS. Preferowana forma kontaktu.</p>
+          <i class="fas fa-phone" aria-hidden="true"></i>
+          <h3><a href="tel:+48694004440" aria-label="Zadzwoń: 694 004 440">+48 694 004 440</a></h3>
+          <p>Preferowana forma kontaktu. Zadzwoń lub napisz SMS.</p>
           <p style="font-size: 14px; margin-top: 10px;">Chcesz inne wymiary lub mocowanie? Ustalmy detale od ręki.</p>
-          <div class="address-tag"><i class="fas fa-map-marker-alt"></i> Chałupki 47-460</div>
+          <div class="address-tag"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Chałupki 47-460</div>
         </div>
 
         <div class="info-box" style="opacity: 0.8; grid-column: 1 / -1;">
-          <i class="fas fa-envelope"></i>
-          <h3 style="font-size: 28px;">wojciech@op.pl</h3>
+          <i class="fas fa-envelope" aria-hidden="true"></i>
+          <h3 style="font-size: 28px;"><a href="mailto:wojciech@op.pl" aria-label="Napisz e-mail: wojciech@op.pl">wojciech@op.pl</a></h3>
           <p>Tylko do podesłania rzutów i szkiców nietypowych projektów.</p>
         </div>
       </div>
     </div>
   </section>
 
+  </main>
+
   <footer>
     &copy; <b>spawa.cz</b> 2006-2026
   </footer>
 
-  <div id="lightbox">
-    <i class="fas fa-times" id="lb-close"></i>
-    <i class="fas fa-chevron-left lb-btn" id="lb-prev"></i>
-    <div class="lb-spinner"></div>
+  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Podgląd zdjęcia">
+    <i class="fas fa-times" id="lb-close" role="button" tabindex="0" aria-label="Zamknij podgląd"></i>
+    <i class="fas fa-chevron-left lb-btn" id="lb-prev" role="button" tabindex="0" aria-label="Poprzednie zdjęcie"></i>
+    <div class="lb-spinner" aria-hidden="true"></div>
     <div class="lb-error">
-      <i class="fas fa-triangle-exclamation"></i>
+      <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
       <span>Nie udało się wczytać zdjęcia.</span>
     </div>
     <img id="lb-img" src="" alt="Powiększone zdjęcie">
-    <i class="fas fa-chevron-right lb-btn" id="lb-next"></i>
+    <i class="fas fa-chevron-right lb-btn" id="lb-next" role="button" tabindex="0" aria-label="Następne zdjęcie"></i>
     <div id="lb-counter">1 / 1</div>
   </div>
-
-  <script src="script.js"></script>
 </body>
 
 </html>
