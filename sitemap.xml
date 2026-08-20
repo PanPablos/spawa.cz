@@ -2,8 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://spawa.cz/</loc>
+<<<<<<< HEAD
     <lastmod>2026-08-20</lastmod>
     <changefreq>weekly</changefreq>
+=======
+    <changefreq>monthly</changefreq>
+>>>>>>> 92759ce (sitemap.xml)
     <priority>1.0</priority>
   </url>
 </urlset>
