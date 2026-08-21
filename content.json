@@ -130,11 +130,9 @@
         "img/portfolio/mocowanie_rura/2.jpg"
       ]
     },
-
-
     {
       "thumb": "img/portfolio/domofon/1.jpg",
-      "alt": "Mocowanie do rury",
+      "alt": "Mocowanie pod domofon",
       "images": [
         "img/portfolio/domofon/1.jpg",
         "img/portfolio/domofon/2.jpg",
@@ -143,22 +141,18 @@
         "img/portfolio/domofon/5.jpg"
       ]
     },
-
-
     {
       "thumb": "img/portfolio/uchwyt_na_flage/1.jpg",
-      "alt": "Mocowanie do rury",
+      "alt": "Uchwyt na flagę",
       "images": [
         "img/portfolio/uchwyt_na_flage/1.jpg",
         "img/portfolio/uchwyt_na_flage/2.jpg",
         "img/portfolio/uchwyt_na_flage/3.jpg"
       ]
     },
-
-
     {
       "thumb": "img/portfolio/uchwyt_dlugi/1.jpg",
-      "alt": "Mocowanie do rury",
+      "alt": "Uchwyt długi",
       "images": [
         "img/portfolio/uchwyt_dlugi/1.jpg",
         "img/portfolio/uchwyt_dlugi/2.jpg"
