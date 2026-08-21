@@ -753,6 +753,7 @@ footer b {
   }
 }
 
+/*
 @media (prefers-reduced-motion: reduce) {
   .sparks {
     display: none;
@@ -763,6 +764,7 @@ footer b {
     transform: none;
   }
 }
+*/
 
 header,
 #hero,
@@ -920,7 +922,6 @@ footer {
     font-size: 30px;
   }
 
-  /* na telefonie druga kopia .marquee-content i animacja CSS są zbędne — galeria przewija się dotykiem jak zwykła lista */
   .marquee {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
