@@ -302,4 +302,73 @@
     document.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
   }
 
+  // --- Cookie consent + GA4 (Google Consent Mode v2) ---
+  const GA_MEASUREMENT_ID = 'G-HR128KBRGS'; 
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { window.dataLayer.push(arguments); }
+  window.gtag = gtag;
+
+  gtag('consent', 'default', {
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
+    analytics_storage: 'denied'
+  });
+
+  function loadGA4Script() {
+    if (window.gtagScriptLoaded) return;
+    window.gtagScriptLoaded = true;
+
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_MEASUREMENT_ID;
+    document.head.appendChild(script);
+
+    gtag('js', new Date());
+    gtag('config', GA_MEASUREMENT_ID, { anonymize_ip: true });
+  }
+
+  loadGA4Script();
+
+  const cookieBar = document.getElementById('cookie-bar');
+  const cookieAccept = document.getElementById('cookie-accept');
+  const cookieDecline = document.getElementById('cookie-decline');
+  const CONSENT_KEY = 'cookie-consent';
+
+  if (cookieBar) {
+    const consent = localStorage.getItem(CONSENT_KEY);
+
+    if (consent === 'accepted') {
+      gtag('consent', 'update', { 
+        ad_storage: 'granted',
+        ad_user_data: 'granted',
+        ad_personalization: 'granted',
+        analytics_storage: 'granted' 
+      });
+    } else if (consent !== 'declined') {
+      setTimeout(() => cookieBar.classList.add('visible'), 800);
+    }
+
+    if (cookieAccept) {
+      cookieAccept.addEventListener('click', () => {
+        localStorage.setItem(CONSENT_KEY, 'accepted');
+        cookieBar.classList.remove('visible');
+        gtag('consent', 'update', { 
+			ad_storage: 'granted',
+			ad_user_data: 'granted',
+			ad_personalization: 'granted',
+			analytics_storage: 'granted' 
+		  });
+      });
+    }
+
+    if (cookieDecline) {
+      cookieDecline.addEventListener('click', () => {
+        localStorage.setItem(CONSENT_KEY, 'declined');
+        cookieBar.classList.remove('visible');
+      });
+    }
+  }
+
 })();

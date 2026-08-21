@@ -951,3 +951,144 @@ footer {
     content: none;
   }
 }
+
+/* Cookie consent bar */
+#cookie-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  visibility: hidden; 
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 10px 16px;
+  background: rgba(10, 10, 10, 0.92);
+  backdrop-filter: blur(6px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  transform: translateY(100%);
+  transition: transform 0.4s ease, visibility 0.4s;
+}
+
+#cookie-bar.visible {
+  visibility: visible;
+  transform: translateY(0);
+}
+
+#cookie-bar p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+#cookie-bar p a {
+  color: var(--text-muted);
+  text-decoration: underline;
+}
+
+#cookie-bar p a:hover {
+  color: var(--accent);
+}
+
+.cookie-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.cookie-actions button {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: transparent;
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.cookie-actions button:hover {
+  border-color: var(--accent);
+  color: var(--text-main);
+}
+
+#cookie-accept {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+#cookie-accept:hover {
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+@media (max-width: 600px) {
+  #cookie-bar {
+    padding: 8px 12px;
+    gap: 10px;
+  }
+
+  #cookie-bar p {
+    font-size: 11px;
+    flex-basis: 100%;
+    text-align: center;
+  }
+
+  .cookie-actions {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.policy-container {
+  max-width: 800px;
+  margin: 120px auto 60px;
+  padding: 0 5vw;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+.policy-container h1 {
+  font-family: 'Oswald', sans-serif;
+  font-size: 38px;
+  color: var(--text-main);
+  margin-bottom: 30px;
+  text-transform: uppercase;
+}
+.policy-container h2 {
+  font-family: 'Oswald', sans-serif;
+  font-size: 20px;
+  color: var(--text-main);
+  margin: 40px 0 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.policy-container p {
+  margin-bottom: 15px;
+}
+.policy-container a {
+  color: var(--accent);
+  text-decoration: none;
+}
+.policy-container a:hover {
+  text-decoration: underline;
+}
+.back-btn {
+  display: inline-block;
+  margin-bottom: 30px;
+  padding: 10px 20px;
+  border: 1px solid var(--accent);
+  color: var(--text-main);
+  text-decoration: none;
+  font-family: 'Oswald', sans-serif;
+  text-transform: uppercase;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+.back-btn:hover {
+  background: var(--accent);
+}
