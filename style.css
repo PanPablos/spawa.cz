@@ -90,6 +90,7 @@ header {
 
 .nav-links {
   display: flex;
+  flex-shrink: 0;
   gap: 40px;
   margin-right: 20px;
   margin-left: 20px;
@@ -102,6 +103,7 @@ header {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
+  white-space: nowrap;
   transition: var(--transition);
   position: relative;
 }
@@ -211,10 +213,13 @@ header {
   text-decoration: none;
   font-weight: 700;
   font-family: 'Oswald', sans-serif;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 1px;
   transition: var(--transition);
   border-radius: 2px;
+  border: 2px solid transparent;
+  line-height: 1.2;
 }
 
 .btn:hover {
@@ -241,14 +246,15 @@ header {
   text-decoration: none;
   font-family: 'Oswald', sans-serif;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 16px;
   letter-spacing: 0.5px;
+  line-height: 1.2;
   transition: var(--transition);
 }
 
 .hero-phone i {
   color: var(--accent);
-  font-size: 18px;
+  font-size: 16px;
   transition: var(--transition);
 }
 
@@ -883,6 +889,22 @@ footer {
 
   .about-photo-img {
     display: none;
+  }
+}
+
+@media (max-width: 1080px) {
+  header {
+    padding: 20px 30px;
+  }
+
+  .nav-links {
+    gap: 20px;
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+
+  .nav-links a {
+    font-size: 12px;
   }
 }
 
