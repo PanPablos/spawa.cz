@@ -813,6 +813,12 @@ footer {
   gap: 30px;
 }
 
+@media (min-width: 1000px) {
+  .guide-grid > .guide-card:nth-child(4):last-child {
+    grid-column: 2;
+  }
+}
+
 .guide-card {
   background: var(--bg-elevated);
   border: 1px solid rgba(255, 255, 255, 0.05);
