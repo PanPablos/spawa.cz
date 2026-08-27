@@ -287,6 +287,16 @@
     if (e.key === 'ArrowLeft') btnPrev.click();
   });
 
+  // --- Śledzenie konwersji Google Ads: kliknięcia w tel: i mailto: ---
+  document.querySelectorAll('a[href^="tel:"], a[href^="mailto:"]').forEach(link => {
+    link.addEventListener('click', function (e) {
+      if (typeof window.gtag_report_conversion === 'function') {
+        e.preventDefault();
+        window.gtag_report_conversion(this.href);
+      }
+    });
+  });
+
   if ('IntersectionObserver' in window) {
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
