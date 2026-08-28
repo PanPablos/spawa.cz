@@ -898,12 +898,14 @@ footer {
   border-radius: 8px;
   padding: 35px 30px;
   transition: transform 0.3s, border-color 0.3s;
+  position: relative;
 }
 
 .guide-card:hover {
   transform: translateY(-5px);
   border-color: var(--accent);
 }
+
 
 .guide-card i {
   font-size: 30px;
@@ -946,6 +948,17 @@ footer {
   color: var(--text-muted);
   font-size: 15px;
   line-height: 1.7;
+}
+
+.material-note {
+  position: absolute;
+  bottom: 14px;
+  left: 16px;
+  font-size: 11px;
+  color: var(--text-muted);
+  opacity: 0.5;
+  user-select: none;
+  margin-left: 15px;
 }
 
 .guide-note strong {
