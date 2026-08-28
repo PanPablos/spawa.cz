@@ -850,6 +850,7 @@ header,
 #o-mnie,
 #galeria,
 #poradnik,
+#faq,
 #kontakt,
 footer {
   position: relative;
@@ -961,6 +962,102 @@ footer {
   text-decoration: underline;
 }
 
+#faq {
+  padding: 0px 5vw 120px;
+  background: var(--bg-base);
+}
+
+.faq-block {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.faq-item {
+  background: var(--bg-elevated);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+
+.faq-item[open] {
+  border-color: var(--accent);
+}
+
+.faq-item summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 18px;
+  letter-spacing: 0.3px;
+  transition: color 0.3s;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item summary::marker {
+  content: "";
+}
+
+.faq-item summary:hover {
+  color: var(--accent);
+}
+
+.faq-icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 94, 0, 0.1);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  transition: transform 0.35s ease;
+}
+
+.faq-item[open] .faq-icon {
+  transform: rotate(45deg);
+}
+
+.faq-answer {
+  padding: 0 28px 26px;
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.75;
+  animation: faqFade 0.35s ease;
+}
+
+.faq-answer p {
+  max-width: 640px;
+}
+
+@keyframes faqFade {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 992px) {
   .about-container {
     grid-template-columns: 1fr;
@@ -1007,8 +1104,18 @@ footer {
   #hero,
   #o-mnie,
   #poradnik,
+  #faq,
   #kontakt {
     padding: 60px 20px;
+  }
+
+  .faq-item summary {
+    padding: 18px 20px;
+    font-size: 16px;
+  }
+
+  .faq-answer {
+    padding: 0 20px 20px;
   }
 
   .guide-block + .guide-block {
