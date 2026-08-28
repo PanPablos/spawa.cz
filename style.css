@@ -560,7 +560,7 @@ header {
 }
 
 #kontakt {
-  padding: 120px 5vw;
+  padding: 80px 120px 5vw;
   background: var(--bg-surface);
   text-align: center;
 }
@@ -858,7 +858,7 @@ footer {
 }
 
 #poradnik {
-  padding: 120px 5vw;
+  padding: 120px 5vw 100px;
   background: var(--bg-base);
 }
 
@@ -963,9 +963,10 @@ footer {
 }
 
 #faq {
-  padding: 0px 5vw 120px;
+  padding: 0px 5vw 100px;
   background: var(--bg-base);
 }
+
 
 .faq-block {
   max-width: 900px;
