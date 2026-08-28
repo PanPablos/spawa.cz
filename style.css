@@ -405,6 +405,10 @@ header {
   animation: scroll-left 30s linear infinite;
 }
 
+#testimonials-marquee .marquee-content {
+  animation-duration: 120s;
+}
+
 .marquee:hover .marquee-content {
   animation-play-state: paused;
 }
@@ -487,6 +491,72 @@ header {
   font-size: 15px;
   line-height: 1.7;
   padding: 40px 5vw;
+}
+
+.testimonial-card {
+  width: 340px;
+  min-height: 230px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-elevated);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 30px;
+  transition: border-color 0.3s, transform 0.3s;
+}
+
+.testimonial-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+}
+
+.testimonial-stars {
+  color: var(--accent);
+  font-size: 14px;
+  letter-spacing: 3px;
+  margin-bottom: 16px;
+}
+
+.testimonial-text {
+  color: var(--text-main);
+  font-size: 15px;
+  line-height: 1.7;
+  flex-grow: 1;
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.testimonial-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.testimonial-name {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.testimonial-source {
+  color: var(--text-muted);
+  font-size: 12px;
 }
 
 #kontakt {
@@ -725,6 +795,8 @@ footer b {
   overflow: hidden;
   pointer-events: none;
   z-index: 1;
+  opacity: 1;
+  transition: opacity 0.4s ease;
 }
 
 .sparks span {
@@ -956,6 +1028,8 @@ footer {
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x proximity;
     scrollbar-width: none;
+    scroll-padding-left: 20px;
+    scroll-padding-right: 20px;
   }
 
   .marquee::-webkit-scrollbar {
@@ -979,6 +1053,12 @@ footer {
 
   .gallery-item::after {
     content: none;
+  }
+
+  .testimonial-card {
+    scroll-snap-align: start;
+    width: 78vw;
+    max-width: 340px;
   }
 }
 

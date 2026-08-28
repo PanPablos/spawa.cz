@@ -158,5 +158,132 @@
         "img/portfolio/uchwyt_dlugi/2.jpg"
       ]
     }
+  ],
+  
+ 
+"testimonials": [
+    {
+      "name": "Marek K.",
+      "source": "Facebook",
+      "stars": 5,
+      "text": "Balustrada zrobiona idealnie na wymiar, spoiny czyste, montaż szybki i bez bałaganu. Polecam."
+    },
+	
+	{
+      "name": "Tomasz S.",
+      "source": "Allegro",
+      "stars": 5,
+      "text": "Wszystko w porządku polecam. Na pewno wrócę po kolejne zamówienie."
+    },
+	
+    {
+      "name": "Zbigniew C.",
+      "source": "Facebook",
+      "stars": 5,
+      "text": "Nietypowy uchwyt na antenę zrobiony dokładnie tak, jak chciałem. Bardzo dobry kontakt ze sprzedającym wszystko szybko ustalone."
+    },
+
+    {
+      "name": "Zbyszek. T",
+      "source": "SMS",
+      "stars": 5,
+      "text": "Panie Wojtku efekt końcowy przerósł oczekiwania :)"
+    },
+    {
+      "name": "Aleksander K.",
+      "source": "Facebook",
+      "stars": 5,
+      "text": "Naprawa tłumiku tytanowego wykonana precyzyjnie coś czego nie chciał podjąć się nikt inny w okolicy. Profesjonalizm na najwyższym poziomie."
+    },
+    {
+      "name": "Samuel",
+      "source": "Google",
+      "stars": 5,
+      "text": "spawanie aluminium profeska zależało mi na czasie i wszystko wyszło super"
+    },
+    {
+      "name": "Ewa i Piotr",
+      "source": "Google",
+      "stars": 5,
+      "text": "Konstrukcja ze stali wykonana bardzo solidnie. Świetny fachowiec."
+    },
+    {
+      "name": "Kamil D.",
+      "source": "Allegro",
+      "stars": 5,
+      "text": "Szybka wysyłka paczkomatem. Uchwyt masztu mocniejszy niż te z marketów."
+    },
+    {
+      "name": "Petr C.",
+      "source": "Google",
+      "stars": 5,
+      "text": "Všechno v pohodě, domluva rychlá. doporučuju"
+    },
+    {
+      "name": "Barbara O.",
+      "source": "Google",
+      "stars": 5,
+      "text": "Balustrada balkonowa w Chałupkach wykonana wzorowo. Bardzo szybka realizacja, polecam."
+    },
+    {
+      "name": "Michał L.",
+      "source": "Allegro",
+      "stars": 4,
+      "text": "Wszystko w porządku, uchwyt idealnie docięty, pomimo gabarytów udało się wysłać inpostem."
+    },
+    {
+      "name": "Miłosz Z.",
+      "source": "Google",
+      "stars": 5,
+      "text": "Bardzo ładne i czyste spoiny nawet przy mniejszych detalach. Pełen profesjonalizm."
+    },
+    {
+      "name": "Szymon K.",
+      "source": "Allegro",
+      "stars": 5,
+      "text": "Zamawiałem mocowanie pod nietypowy projekt. Element przyszedł idealnie dopasowany."
+    },
+    {
+      "name": "Dawid J.",
+      "source": "Google",
+      "stars": 5,
+      "text": "Dobrej jakości nierdzewka. Poprzedni uchwyt z ocynku rdzewiał, ten trzyma się idealnie."
+    },
+    {
+      "name": "Grzegorz F.",
+      "source": "Allegro",
+      "stars": 5,
+      "text": "Montaż na zewnątrz. Pomimo grubej izolacji wszystko trzyma jak należy."
+    },
+    {
+      "name": "Łukasz P.",
+      "source": "Allegro",
+      "stars": 5,
+      "text": "Zdecydowanie polecam. Wszystko jest wykonane bardzo starannie. Widać skąd pewność przy gwarancji jakości."
+    },
+    {
+      "name": "Magdalena W.",
+      "source": "Google",
+      "stars": 5,
+      "text": "Świetny kontakt, jasno wszystko wytłumaczone. Wybraliśmy nierdzewkę i jesteśmy zachwyceni."
+    },
+    {
+      "name": "Robert N.",
+      "source": "Google",
+      "stars": 5,
+      "text": "Spawanie większej konstrukcji poszło bardzo sprawnie. Widać doświadczenie, polecam."
+    },
+    {
+      "name": "Karol H.",
+      "source": "Allegro",
+      "stars": 5,
+      "text": "Nietypowe malutkie haczyki na wymiar wykonane 10/10. Przyszły dobrze zapakowane."
+    },
+    {
+      "name": "Wojciech T.",
+      "source": "Google",
+      "stars": 5,
+      "text": "Balkon francuski wykonany bardzo starannie żona jest zadowolona z efektu."
+    }
   ]
 }

@@ -56,6 +56,7 @@
           setTimeout(() => loadContent(attempt + 1, maxAttempts), attempt * 1000);
         } else {
           showGalleryStatus('Nie udało się wczytać galerii. Sprawdź połączenie z internetem.', true);
+          showGalleryStatus('Nie udało się wczytać opinii. Sprawdź połączenie z internetem.', true, 'testimonials-marquee');
         }
       });
   }
@@ -68,19 +69,21 @@
     }
   });
 
-  function showGalleryStatus(message, showRetry) {
-    const marquee = document.getElementById('marquee');
+  function showGalleryStatus(message, showRetry, targetId) {
+    const marquee = document.getElementById(targetId || 'marquee');
     if (!marquee) return;
 
+    const linkId = (targetId || 'marquee') + '-retry-link';
+
     marquee.innerHTML = '<p class="marquee-status">' + message +
-      (showRetry ? ' <a href="#" id="marquee-retry-link" style="color:var(--accent);text-decoration:underline;">Spróbuj ponownie</a>' : '') +
+      (showRetry ? ' <a href="#" id="' + linkId + '" style="color:var(--accent);text-decoration:underline;">Spróbuj ponownie</a>' : '') +
       '</p>';
 
-    const link = document.getElementById('marquee-retry-link');
+    const link = document.getElementById(linkId);
     if (link) {
       link.addEventListener('click', (e) => {
         e.preventDefault();
-        showGalleryStatus('Wczytuję galerię...');
+        showGalleryStatus(targetId === 'testimonials-marquee' ? 'Wczytuję opinie...' : 'Wczytuję galerię...', false, targetId);
         loadContent();
       });
     }
@@ -110,6 +113,12 @@
       buildGallery(data.gallery);
     } else {
       showGalleryStatus('Brak zdjęć w content.json (pusta lub brakująca sekcja "gallery").');
+    }
+
+    if (Array.isArray(data.testimonials) && data.testimonials.length > 0) {
+      buildTestimonials(data.testimonials);
+    } else {
+      showGalleryStatus('Brak opinii w content.json (pusta lub brakująca sekcja "testimonials").', false, 'testimonials-marquee');
     }
   }
 
@@ -185,6 +194,69 @@
     }
 
     attachGalleryListeners();
+  }
+
+  function initials(name) {
+    return name
+      .split(' ')
+      .map(part => part.charAt(0))
+      .join('')
+      .slice(0, 2)
+      .toUpperCase();
+  }
+
+  function buildTestimonials(items) {
+    const wrap = document.getElementById('testimonials-marquee');
+    if (!wrap || !Array.isArray(items) || items.length === 0) return;
+
+    wrap.innerHTML = '';
+
+    for (let copy = 0; copy < 2; copy++) {
+      const row = document.createElement('div');
+      row.className = 'marquee-content';
+
+      items.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'testimonial-card';
+
+        const stars = document.createElement('div');
+        stars.className = 'testimonial-stars';
+        stars.setAttribute('aria-hidden', 'true');
+        stars.innerText = '★'.repeat(item.stars || 5);
+
+        const text = document.createElement('p');
+        text.className = 'testimonial-text';
+        text.innerText = item.text;
+
+        const author = document.createElement('div');
+        author.className = 'testimonial-author';
+
+        const avatar = document.createElement('div');
+        avatar.className = 'testimonial-avatar';
+        avatar.innerText = initials(item.name);
+        avatar.setAttribute('aria-hidden', 'true');
+
+        const meta = document.createElement('div');
+        const name = document.createElement('div');
+        name.className = 'testimonial-name';
+        name.innerText = item.name;
+        const source = document.createElement('div');
+        source.className = 'testimonial-source';
+        source.innerText = item.source ? 'Opinia z ' + item.source : '';
+
+        meta.appendChild(name);
+        meta.appendChild(source);
+        author.appendChild(avatar);
+        author.appendChild(meta);
+
+        card.appendChild(stars);
+        card.appendChild(text);
+        card.appendChild(author);
+        row.appendChild(card);
+      });
+
+      wrap.appendChild(row);
+    }
   }
 
   function updateLightbox() {
@@ -310,6 +382,18 @@
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
   } else {
     document.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
+  }
+
+
+  const sparksEl = document.querySelector('.sparks');
+  const heroSection = document.getElementById('hero');
+  if (sparksEl && heroSection && 'IntersectionObserver' in window) {
+    const sparksObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        sparksEl.style.opacity = entry.isIntersecting ? '1' : '0';
+      });
+    });
+    sparksObserver.observe(heroSection);
   }
 
   // --- Cookie consent + GA4 (Google Consent Mode v2) ---
