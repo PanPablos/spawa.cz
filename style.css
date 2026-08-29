@@ -1060,6 +1060,11 @@ footer {
   max-width: 640px;
 }
 
+.faq-answer a {
+  color: inherit;
+  text-decoration: none;
+}
+
 @keyframes faqFade {
   from {
     opacity: 0;
