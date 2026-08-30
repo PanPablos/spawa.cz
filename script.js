@@ -179,7 +179,7 @@
         div.setAttribute('data-gallery', gallery.join(','));
 
         const img = document.createElement('img');
-        img.alt = item.alt || '';
+        img.alt = item.alt || 'Uchwyt ze stali nierdzewnej';
         img.decoding = 'async';
         img.loading = 'lazy';
         img.width = 380;
