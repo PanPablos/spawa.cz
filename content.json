@@ -8,13 +8,13 @@
   },
   "gallery": [
     {
-      "thumb": "img/portfolio/porecz_dluga/1.jpg",
+      "thumb": "img/portfolio/uchwyt_antenowy/1.jpg",
       "alt": "Długa poręcz spawana",
       "images": [
-        "img/portfolio/porecz_dluga/1.jpg",
-        "img/portfolio/porecz_dluga/2.jpg",
-        "img/portfolio/porecz_dluga/3.jpg",
-        "img/portfolio/porecz_dluga/4.jpg"
+        "img/portfolio/uchwyt_antenowy/1.jpg",
+        "img/portfolio/uchwyt_antenowy/2.jpg",
+        "img/portfolio/uchwyt_antenowy/3.jpg",
+        "img/portfolio/uchwyt_antenowy/4.jpg"
       ]
     },
     {
@@ -156,6 +156,17 @@
       "images": [
         "img/portfolio/uchwyt_dlugi/1.jpg",
         "img/portfolio/uchwyt_dlugi/2.jpg"
+      ]
+    },
+	{
+      "thumb": "img/portfolio/porecz_mocowanie/1.jpg",
+      "alt": "Uchwyt długi",
+      "images": [
+        "img/portfolio/porecz_mocowanie/1.jpg",
+        "img/portfolio/porecz_mocowanie/2.jpg",
+		"img/portfolio/porecz_mocowanie/3.jpg",
+		"img/portfolio/porecz_mocowanie/4.jpg",
+		"img/portfolio/porecz_mocowanie/5.jpg"
       ]
     }
   ],
