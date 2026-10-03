@@ -42,10 +42,10 @@
     rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
+  <script>document.documentElement.classList.add('js');</script>
   <link rel="stylesheet" href="style.css" />
   <script src="script.js" defer></script>
 
-  <!-- Event snippet for Kontakt (1) conversion page -->
   <script>
   function gtag_report_conversion(url) {
     var callback = function () {
@@ -184,7 +184,7 @@
 
   <section id="o-mnie">
     <div class="about-container reveal">
-      <img class="about-photo-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBTAA7" alt="Spawacz">
+      <img class="about-photo-img" src="img/spawaczwc.jpg" alt="Wojciech Chrobok - Spawacz" loading="lazy" decoding="async">
 
       <div class="glow-card">
         <div class="glow-card-inner about-text">
@@ -272,9 +272,9 @@
           <span class="guide-tag">Bez prądu</span>
           <h3>Spawanie gazowe (palnikiem)</h3>
           <p>Wykorzystuje płomień tlenowo-acetylenowy o temperaturze ponad 3000°C. Niezastąpione przy naprawach żeliwa, instalacjach rur, lutowaniu twardym oraz w miejscach bez dostępu do prądu.</p>
-		    </div>
+        </div>
+      </div>
 
-    </div>
       <div class="guide-note">
         <strong>Nie wiesz, która metoda pasuje do Twojego projektu?</strong> Nie musisz wiedzieć wystarczy,
         że opiszesz mi element i miejsce montażu, a ja dobiorę technikę. <a href="#kontakt">Zadzwoń lub
@@ -295,7 +295,7 @@
           <i class="fas fa-cube" aria-hidden="true"></i>
           <span class="guide-tag">Budżet i wytrzymałość</span>
           <h3>Stal czarna 
-            <span class="chem-formula"><b title="Iron (Żelazo)">Fe</b>&nbsp;~99% | <b title="Carbon (Węgiel)">C</b>&nbsp;<0.3%</span>
+            <span class="chem-formula"><b title="Iron (Żelazo)">Fe</b>&nbsp;~99% | <b title="Carbon (Węgiel)">C</b>&nbsp;&lt;0.3%</span>
           </h3>
           
           <p>Tańsza i bardzo wytrzymała mechanicznie. Wymaga zabezpieczenia antykorozyjnego malowania
@@ -529,13 +529,13 @@
           <i class="fas fa-phone" aria-hidden="true"></i>
           <h3><a href="tel:+48694004440" aria-label="Zadzwoń: 694 004 440">+48 694 004 440</a></h3>
           <p>Preferowana forma kontaktu. Zadzwoń lub napisz SMS.</p>
-          <p style="font-size: 14px; margin-top: 10px;">Chcesz inne wymiary lub mocowanie? Ustalmy detale od ręki.</p>
+          <p class="info-note">Chcesz inne wymiary lub mocowanie? Ustalmy detale od ręki.</p>
           <div class="address-tag"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Chałupki 47-460</div>
         </div>
 
-        <div class="info-box" style="opacity: 0.8; grid-column: 1 / -1;">
+        <div class="info-box box-secondary">
           <i class="fas fa-envelope" aria-hidden="true"></i>
-          <h3 style="font-size: 28px;"><a href="mailto:wojciech@op.pl" aria-label="Napisz e-mail: wojciech@op.pl">wojciech@op.pl</a></h3>
+          <h3><a href="mailto:wojciech@op.pl" aria-label="Napisz e-mail: wojciech@op.pl">wojciech@op.pl</a></h3>
           <p>Tylko do podesłania rzutów i szkiców nietypowych projektów.</p>
         </div>
       </div>
@@ -559,7 +559,9 @@
     <img id="lb-img" src="" alt="Powiększone zdjęcie">
     <i class="fas fa-chevron-right lb-btn" id="lb-next" role="button" tabindex="0" aria-label="Następne zdjęcie"></i>
     <div id="lb-counter">1 / 1</div>
-  </div>  <div id="cookie-bar" role="dialog" aria-live="polite" aria-label="Informacja o plikach cookie">
+  </div>
+
+  <div id="cookie-bar" role="dialog" aria-live="polite" aria-label="Informacja o plikach cookie">
     <p>Ta strona używa plików cookie do analizy ruchu (Google Analytics). <a href="/polityka-prywatnosci.html">Więcej</a></p>
     <div class="cookie-actions">
       <button type="button" id="cookie-decline">Odrzuć</button>

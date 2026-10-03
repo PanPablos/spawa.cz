@@ -7,104 +7,127 @@
   const btnPrev = document.getElementById('lb-prev');
   const btnNext = document.getElementById('lb-next');
   const btnClose = document.getElementById('lb-close');
+  const marqueeEl = document.getElementById('marquee');
 
+  const CONTENT_URL = 'content.json';
+  const FETCH_TIMEOUT = 10000;
+  const MAX_ATTEMPTS = 5;
+  const DEFAULT_ALT = 'Uchwyt ze stali nierdzewnej';
+
+  let galleryItems = [];
   let currentImages = [];
   let currentIndex = 0;
+  let currentAlt = '';
+  let lastFocus = null;
 
-  function attachGalleryListeners() {
-    document.querySelectorAll('.gallery-item').forEach(item => {
-      item.addEventListener('click', function () {
-        const galleryData = this.getAttribute('data-gallery');
-        if (galleryData) {
-          currentImages = galleryData.split(',');
-          currentIndex = 0;
-          updateLightbox();
-          lightbox.classList.add('active');
-        }
-      });
-    });
+  let contentLoaded = false;
+  let loading = false;
+  let retryTimer = null;
+
+  function toJpg(src) {
+    return src.replace(/\.[a-z0-9]+$/i, '.jpg');
   }
 
-  const headerEl = document.querySelector('header');
+  function fetchJson(url) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
 
-  document.querySelectorAll('a[href^="#"]').forEach(link => {
-    link.addEventListener('click', function (e) {
-      const targetId = this.getAttribute('href');
-      if (!targetId || targetId === '#') return;
-
-      const target = document.querySelector(targetId);
-      if (!target) return;
-
-      e.preventDefault();
-      const headerHeight = headerEl ? headerEl.offsetHeight : 0;
-      const targetTop = target.getBoundingClientRect().top + window.pageYOffset - headerHeight - 10;
-
-      window.scrollTo({ top: targetTop, behavior: 'smooth' });
-    });
-  });
-
-  function loadContent(attempt = 1, maxAttempts = 5) {
-    fetch('content.json', { cache: 'no-store' })
+    return fetch(url, { cache: 'no-cache', signal: controller.signal })
       .then(res => {
-        if (!res.ok) throw new Error('content.json: HTTP ' + res.status);
-        return res.json();
+        if (!res.ok) throw new Error(url + ': HTTP ' + res.status);
+        return res.text();
       })
-      .then(applyContent)
-      .catch(err => {
-        console.warn('Błąd wczytywania content.json (próba ' + attempt + '/' + maxAttempts + ').', err);
-        if (attempt < maxAttempts) {
-          setTimeout(() => loadContent(attempt + 1, maxAttempts), attempt * 1000);
-        } else {
-          showGalleryStatus('Nie udało się wczytać galerii. Sprawdź połączenie z internetem.', true);
-          showGalleryStatus('Nie udało się wczytać opinii. Sprawdź połączenie z internetem.', true, 'testimonials-marquee');
+      .then(text => {
+        try {
+          return JSON.parse(text);
+        } catch (err) {
+          err.badJson = true;
+          throw err;
         }
-      });
+      })
+      .finally(() => clearTimeout(timer));
   }
+
+  function loadContent(attempt = 1) {
+    if (loading) return;
+    loading = true;
+    clearTimeout(retryTimer);
+
+    fetchJson(CONTENT_URL).then(data => {
+      loading = false;
+      applyContent(data);
+    }, err => {
+      loading = false;
+
+      if (err.badJson) {
+        console.error('content.json ma błąd składni:', err.message);
+        showStatus('marquee', 'Nieprawidłowy format danych galerii (content.json).');
+        showStatus('testimonials-marquee', 'Nieprawidłowy format danych opinii (content.json).');
+        return;
+      }
+
+      console.warn('Błąd wczytywania content.json (próba ' + attempt + '/' + MAX_ATTEMPTS + ').', err);
+
+      if (attempt < MAX_ATTEMPTS) {
+        retryTimer = setTimeout(() => loadContent(attempt + 1), attempt * 1000);
+      } else {
+        showStatus('marquee', 'Nie udało się wczytać galerii. Sprawdź połączenie z internetem.', true);
+        showStatus('testimonials-marquee', 'Nie udało się wczytać opinii. Sprawdź połączenie z internetem.', true);
+      }
+    });
+  }
+
   loadContent();
 
   window.addEventListener('online', () => {
-    const marquee = document.getElementById('marquee');
-    if (marquee && marquee.querySelector('.marquee-status')) {
-      loadContent();
-    }
+    if (!contentLoaded) loadContent();
   });
 
-  function showGalleryStatus(message, showRetry, targetId) {
-    const marquee = document.getElementById(targetId || 'marquee');
-    if (!marquee) return;
+  function showStatus(targetId, message, showRetry) {
+    const wrap = document.getElementById(targetId);
+    if (!wrap) return;
 
-    const linkId = (targetId || 'marquee') + '-retry-link';
+    const status = document.createElement('p');
+    status.className = 'marquee-status';
+    status.textContent = message;
 
-    marquee.innerHTML = '<p class="marquee-status">' + message +
-      (showRetry ? ' <a href="#" id="' + linkId + '" style="color:var(--accent);text-decoration:underline;">Spróbuj ponownie</a>' : '') +
-      '</p>';
-
-    const link = document.getElementById(linkId);
-    if (link) {
-      link.addEventListener('click', (e) => {
+    if (showRetry) {
+      const link = document.createElement('a');
+      link.href = '#';
+      link.textContent = 'Spróbuj ponownie';
+      link.addEventListener('click', e => {
         e.preventDefault();
-        showGalleryStatus(targetId === 'testimonials-marquee' ? 'Wczytuję opinie...' : 'Wczytuję galerię...', false, targetId);
+        showStatus('marquee', 'Wczytuję galerię...');
+        showStatus('testimonials-marquee', 'Wczytuję opinie...');
         loadContent();
       });
+      status.append(' ', link);
     }
+
+    wrap.replaceChildren(status);
   }
 
   function applyContent(data) {
+    contentLoaded = true;
+
     if (!data || typeof data !== 'object') {
-      showGalleryStatus('Nieprawidłowy format danych galerii (content.json).');
+      showStatus('marquee', 'Nieprawidłowy format danych galerii (content.json).');
+      showStatus('testimonials-marquee', 'Nieprawidłowy format danych opinii (content.json).');
       return;
     }
 
     if (data.hero && data.hero.background) {
       const hero = document.getElementById('hero');
-      hero.style.background =
-        "linear-gradient(to right, rgba(5,5,5,0.95) 0%, rgba(5,5,5,0.6) 100%), url('" + data.hero.background + "') center/cover fixed";
+      if (hero) {
+        hero.style.backgroundImage =
+          "linear-gradient(to right, rgba(5,5,5,0.95) 0%, rgba(5,5,5,0.6) 100%), url('" + data.hero.background + "')";
+      }
     }
 
     if (data.about) {
       const aboutImg = document.querySelector('.about-photo-img');
       if (aboutImg) {
-        if (data.about.photo) aboutImg.src = data.about.photo;
+        if (data.about.photo && aboutImg.getAttribute('src') !== data.about.photo) aboutImg.src = data.about.photo;
         if (data.about.photoAlt) aboutImg.alt = data.about.photoAlt;
       }
     }
@@ -112,13 +135,13 @@
     if (Array.isArray(data.gallery) && data.gallery.length > 0) {
       buildGallery(data.gallery);
     } else {
-      showGalleryStatus('Brak zdjęć w content.json (pusta lub brakująca sekcja "gallery").');
+      showStatus('marquee', 'Brak zdjęć w content.json (pusta lub brakująca sekcja "gallery").');
     }
 
     if (Array.isArray(data.testimonials) && data.testimonials.length > 0) {
       buildTestimonials(data.testimonials);
     } else {
-      showGalleryStatus('Brak opinii w content.json (pusta lub brakująca sekcja "testimonials").', false, 'testimonials-marquee');
+      showStatus('testimonials-marquee', 'Brak opinii w content.json (pusta lub brakująca sekcja "testimonials").');
     }
   }
 
@@ -130,9 +153,8 @@
     img.onerror = () => {
       if (attempt <= maxRetries) {
         setTimeout(() => loadThumb(img, div, originalSrc, attempt + 1, extTried), attempt * 700);
-      } else if (!extTried) {
-
-        loadThumb(img, div, originalSrc.replace(/\.[a-zA-Z0-9]+$/, ".jpg"), 1, true);
+      } else if (!extTried && toJpg(originalSrc) !== originalSrc) {
+        loadThumb(img, div, toJpg(originalSrc), 1, true);
       } else {
         img.classList.add('thumb-error');
         div.classList.add('thumb-broken');
@@ -160,26 +182,25 @@
   });
 
   function buildGallery(items) {
-    const marquee = document.getElementById('marquee');
-    if (!marquee) return;
-    marquee.innerHTML = '';
+    if (!marqueeEl) return;
+
+    galleryItems = items.filter(item => item && item.thumb);
+    marqueeEl.replaceChildren();
 
     for (let copy = 0; copy < 2; copy++) {
       const row = document.createElement('div');
       row.className = 'marquee-content';
+      if (copy) row.setAttribute('aria-hidden', 'true');
 
-      items.forEach(item => {
-        if (!item.thumb) return;
-        const gallery = Array.isArray(item.images) && item.images.length > 0
-          ? item.images
-          : [item.thumb];
-
+      galleryItems.forEach((item, index) => {
         const div = document.createElement('div');
         div.className = 'gallery-item';
-        div.setAttribute('data-gallery', gallery.join(','));
+        div.dataset.index = index;
+        div.setAttribute('role', 'button');
+        div.tabIndex = copy ? -1 : 0;
 
         const img = document.createElement('img');
-        img.alt = item.alt || 'Uchwyt ze stali nierdzewnej';
+        img.alt = item.alt || DEFAULT_ALT;
         img.decoding = 'async';
         img.loading = 'lazy';
         img.width = 380;
@@ -190,10 +211,23 @@
         row.appendChild(div);
       });
 
-      marquee.appendChild(row);
+      marqueeEl.appendChild(row);
     }
+  }
 
-    attachGalleryListeners();
+  if (marqueeEl) {
+    marqueeEl.addEventListener('click', e => {
+      const item = e.target.closest('.gallery-item');
+      if (item) openGallery(Number(item.dataset.index));
+    });
+
+    marqueeEl.addEventListener('keydown', e => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      const item = e.target.closest('.gallery-item');
+      if (!item) return;
+      e.preventDefault();
+      openGallery(Number(item.dataset.index));
+    });
   }
 
   function initials(name) {
@@ -205,53 +239,42 @@
       .toUpperCase();
   }
 
+  function el(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text) node.textContent = text;
+    return node;
+  }
+
   function buildTestimonials(items) {
     const wrap = document.getElementById('testimonials-marquee');
-    if (!wrap || !Array.isArray(items) || items.length === 0) return;
+    if (!wrap) return;
 
-    wrap.innerHTML = '';
+    wrap.replaceChildren();
 
     for (let copy = 0; copy < 2; copy++) {
-      const row = document.createElement('div');
-      row.className = 'marquee-content';
+      const row = el('div', 'marquee-content');
+      if (copy) row.setAttribute('aria-hidden', 'true');
 
       items.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'testimonial-card';
+        const card = el('div', 'testimonial-card');
 
-        const stars = document.createElement('div');
-        stars.className = 'testimonial-stars';
+        const stars = el('div', 'testimonial-stars', '★'.repeat(item.stars || 5));
         stars.setAttribute('aria-hidden', 'true');
-        stars.innerText = '★'.repeat(item.stars || 5);
 
-        const text = document.createElement('p');
-        text.className = 'testimonial-text';
-        text.innerText = item.text;
-
-        const author = document.createElement('div');
-        author.className = 'testimonial-author';
-
-        const avatar = document.createElement('div');
-        avatar.className = 'testimonial-avatar';
-        avatar.innerText = initials(item.name);
+        const avatar = el('div', 'testimonial-avatar', initials(item.name || ''));
         avatar.setAttribute('aria-hidden', 'true');
 
-        const meta = document.createElement('div');
-        const name = document.createElement('div');
-        name.className = 'testimonial-name';
-        name.innerText = item.name;
-        const source = document.createElement('div');
-        source.className = 'testimonial-source';
-        source.innerText = item.source ? 'Opinia z ' + item.source : '';
+        const meta = el('div');
+        meta.append(
+          el('div', 'testimonial-name', item.name),
+          el('div', 'testimonial-source', item.source ? 'Opinia z ' + item.source : '')
+        );
 
-        meta.appendChild(name);
-        meta.appendChild(source);
-        author.appendChild(avatar);
-        author.appendChild(meta);
+        const author = el('div', 'testimonial-author');
+        author.append(avatar, meta);
 
-        card.appendChild(stars);
-        card.appendChild(text);
-        card.appendChild(author);
+        card.append(stars, el('p', 'testimonial-text', item.text), author);
         row.appendChild(card);
       });
 
@@ -259,20 +282,52 @@
     }
   }
 
+  function openGallery(index) {
+    const item = galleryItems[index];
+    if (!item) return;
+
+    currentImages = Array.isArray(item.images) && item.images.length > 0 ? item.images : [item.thumb];
+    currentAlt = item.alt || DEFAULT_ALT;
+    currentIndex = 0;
+    lastFocus = document.activeElement;
+
+    updateLightbox();
+    lightbox.classList.add('active');
+    btnClose.focus();
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('active');
+    if (lastFocus && typeof lastFocus.focus === 'function') {
+      lastFocus.focus({ preventScroll: true });
+    }
+    lastFocus = null;
+  }
+
   function updateLightbox() {
-    const src = currentImages[currentIndex].trim();
-    lbCounter.innerText = (currentIndex + 1) + " / " + currentImages.length;
-    btnPrev.style.display = currentImages.length > 1 ? 'block' : 'none';
-    btnNext.style.display = currentImages.length > 1 ? 'block' : 'none';
-    loadLightboxImage(src);
+    const many = currentImages.length > 1;
+    lbCounter.textContent = (currentIndex + 1) + ' / ' + currentImages.length;
+    lbImg.alt = currentAlt;
+    btnPrev.style.display = many ? 'block' : 'none';
+    btnNext.style.display = many ? 'block' : 'none';
+    loadLightboxImage(currentImages[currentIndex]);
     preloadNeighbors();
   }
 
   let lbLoadToken = 0;
   let lbTimeoutId = null;
 
+  function showLightboxError(token) {
+    if (token !== lbLoadToken) return;
+    clearTimeout(lbTimeoutId);
+    lightbox.classList.remove('lb-loading');
+    lightbox.classList.add('lb-error-state');
+  }
+
   function loadLightboxImage(src) {
     const token = ++lbLoadToken;
+    const fallback = toJpg(src);
+    let triedFallback = false;
     clearTimeout(lbTimeoutId);
 
     lightbox.classList.remove('lb-error-state');
@@ -284,67 +339,59 @@
     loader.onload = () => {
       if (token !== lbLoadToken) return;
       clearTimeout(lbTimeoutId);
-      lbImg.src = src;
+      lbImg.src = loader.src;
       lbImg.classList.remove('lb-hidden');
       lightbox.classList.remove('lb-loading');
     };
 
     loader.onerror = () => {
-      if (!loader.dataset.retried) {
-        loader.dataset.retried = "true";
-        loader.src = loader.src.replace(/\.[a-zA-Z0-9]+$/, ".jpg");
+      if (!triedFallback && fallback !== src) {
+        triedFallback = true;
+        loader.src = fallback;
       } else {
-        if (token !== lbLoadToken) return;
-        clearTimeout(lbTimeoutId);
-        lightbox.classList.remove('lb-loading');
-        lightbox.classList.add('lb-error-state');
+        showLightboxError(token);
       }
     };
 
-    lbTimeoutId = setTimeout(() => {
-      if (token !== lbLoadToken) return;
-      lightbox.classList.remove('lb-loading');
-      lightbox.classList.add('lb-error-state');
-    }, 15000);
+    lbTimeoutId = setTimeout(() => showLightboxError(token), 15000);
 
     loader.src = src;
   }
 
   function preloadNeighbors() {
-    if (currentImages.length <= 1) return;
-    const nextSrc = currentImages[(currentIndex + 1) % currentImages.length].trim();
-    const prevSrc = currentImages[(currentIndex - 1 + currentImages.length) % currentImages.length].trim();
+    const total = currentImages.length;
+    if (total <= 1) return;
 
-    [nextSrc, prevSrc].forEach(src => {
-      const pre = new Image();
-      pre.src = src;
-    });
+    [currentImages[(currentIndex + 1) % total], currentImages[(currentIndex - 1 + total) % total]]
+      .forEach(src => {
+        const pre = new Image();
+        pre.src = src;
+      });
   }
 
-  btnNext.addEventListener('click', (e) => {
+  btnNext.addEventListener('click', e => {
     e.stopPropagation();
     currentIndex = (currentIndex + 1) % currentImages.length;
     updateLightbox();
   });
 
-  btnPrev.addEventListener('click', (e) => {
+  btnPrev.addEventListener('click', e => {
     e.stopPropagation();
     currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
     updateLightbox();
   });
 
-  btnClose.addEventListener('click', () => {
-    lightbox.classList.remove('active');
+  btnClose.addEventListener('click', e => {
+    e.stopPropagation();
+    closeLightbox();
   });
 
-  lightbox.addEventListener('click', (e) => {
-    if (e.target !== lbImg && e.target !== btnNext && e.target !== btnPrev) {
-      lightbox.classList.remove('active');
-    }
+  lightbox.addEventListener('click', e => {
+    if (e.target !== lbImg) closeLightbox();
   });
 
   [btnClose, btnPrev, btnNext].forEach(btn => {
-    btn.addEventListener('keydown', (e) => {
+    btn.addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         btn.click();
@@ -352,25 +399,32 @@
     });
   });
 
-  document.addEventListener('keydown', (e) => {
+  document.addEventListener('keydown', e => {
     if (!lightbox.classList.contains('active')) return;
-    if (e.key === 'Escape') lightbox.classList.remove('active');
+
+    if (e.key === 'Escape') closeLightbox();
     if (e.key === 'ArrowRight') btnNext.click();
     if (e.key === 'ArrowLeft') btnPrev.click();
+
+    if (e.key === 'Tab') {
+      const focusable = [btnClose, btnPrev, btnNext].filter(btn => btn.style.display !== 'none');
+      const pos = focusable.indexOf(document.activeElement);
+      const step = e.shiftKey ? -1 : 1;
+      e.preventDefault();
+      focusable[(pos + step + focusable.length) % focusable.length].focus();
+    }
   });
 
-  // --- Śledzenie konwersji Google Ads: kliknięcia w tel: i mailto: ---
   document.querySelectorAll('a[href^="tel:"], a[href^="mailto:"]').forEach(link => {
-    link.addEventListener('click', function (e) {
+    link.addEventListener('click', () => {
       if (typeof window.gtag_report_conversion === 'function') {
-        e.preventDefault();
-        window.gtag_report_conversion(this.href);
+        window.gtag_report_conversion();
       }
     });
   });
 
   if ('IntersectionObserver' in window) {
-    const revealObserver = new IntersectionObserver((entries) => {
+    const revealObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('active');
@@ -379,29 +433,50 @@
       });
     }, { rootMargin: '0px 0px -100px 0px' });
 
-    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+    document.querySelectorAll('.reveal').forEach(node => revealObserver.observe(node));
   } else {
-    document.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
+    document.querySelectorAll('.reveal').forEach(node => node.classList.add('active'));
   }
-
 
   const sparksEl = document.querySelector('.sparks');
   const heroSection = document.getElementById('hero');
   if (sparksEl && heroSection && 'IntersectionObserver' in window) {
-    const sparksObserver = new IntersectionObserver((entries) => {
+    new IntersectionObserver(entries => {
       entries.forEach(entry => {
-        sparksEl.style.opacity = entry.isIntersecting ? '1' : '0';
+        sparksEl.classList.toggle('is-paused', !entry.isIntersecting);
       });
-    });
-    sparksObserver.observe(heroSection);
+    }).observe(heroSection);
   }
 
-  // --- Cookie consent + GA4 (Google Consent Mode v2) ---
-  const GA_MEASUREMENT_ID = 'G-HR128KBRGS'; 
+  const GA_MEASUREMENT_ID = 'G-HR128KBRGS';
+  const ADS_ID = 'AW-18402849725';
+  const CONSENT_KEY = 'cookie-consent';
+  const CONSENT_GRANTED = {
+    ad_storage: 'granted',
+    ad_user_data: 'granted',
+    ad_personalization: 'granted',
+    analytics_storage: 'granted'
+  };
+
+  function readConsent() {
+    try {
+      return localStorage.getItem(CONSENT_KEY);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function saveConsent(value) {
+    try {
+      localStorage.setItem(CONSENT_KEY, value);
+    } catch (e) {}
+  }
 
   window.dataLayer = window.dataLayer || [];
   function gtag() { window.dataLayer.push(arguments); }
   window.gtag = gtag;
+
+  const consent = readConsent();
 
   gtag('consent', 'default', {
     ad_storage: 'denied',
@@ -410,56 +485,37 @@
     analytics_storage: 'denied'
   });
 
-  function loadGA4Script() {
-    if (window.gtagScriptLoaded) return;
-    window.gtagScriptLoaded = true;
+  if (consent === 'accepted') gtag('consent', 'update', CONSENT_GRANTED);
 
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_MEASUREMENT_ID;
-    document.head.appendChild(script);
+  const gaScript = document.createElement('script');
+  gaScript.async = true;
+  gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_MEASUREMENT_ID;
+  document.head.appendChild(gaScript);
 
-    gtag('js', new Date());
-    gtag('config', GA_MEASUREMENT_ID, { anonymize_ip: true });
-  }
-
-  loadGA4Script();
+  gtag('js', new Date());
+  gtag('config', GA_MEASUREMENT_ID);
+  gtag('config', ADS_ID);
 
   const cookieBar = document.getElementById('cookie-bar');
   const cookieAccept = document.getElementById('cookie-accept');
   const cookieDecline = document.getElementById('cookie-decline');
-  const CONSENT_KEY = 'cookie-consent';
 
   if (cookieBar) {
-    const consent = localStorage.getItem(CONSENT_KEY);
-
-    if (consent === 'accepted') {
-      gtag('consent', 'update', { 
-        ad_storage: 'granted',
-        ad_user_data: 'granted',
-        ad_personalization: 'granted',
-        analytics_storage: 'granted' 
-      });
-    } else if (consent !== 'declined') {
+    if (consent !== 'accepted' && consent !== 'declined') {
       setTimeout(() => cookieBar.classList.add('visible'), 800);
     }
 
     if (cookieAccept) {
       cookieAccept.addEventListener('click', () => {
-        localStorage.setItem(CONSENT_KEY, 'accepted');
+        saveConsent('accepted');
         cookieBar.classList.remove('visible');
-        gtag('consent', 'update', { 
-			ad_storage: 'granted',
-			ad_user_data: 'granted',
-			ad_personalization: 'granted',
-			analytics_storage: 'granted' 
-		  });
+        gtag('consent', 'update', CONSENT_GRANTED);
       });
     }
 
     if (cookieDecline) {
       cookieDecline.addEventListener('click', () => {
-        localStorage.setItem(CONSENT_KEY, 'declined');
+        saveConsent('declined');
         cookieBar.classList.remove('visible');
       });
     }
